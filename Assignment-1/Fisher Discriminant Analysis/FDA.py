@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 from mpl_toolkits.mplot3d import Axes3D
 import scipy.stats as stats
 import copy
@@ -20,10 +19,10 @@ for i in range(row):
     else:
         class2.append([df[i][0], df[i][1], df[i][2]])
         ptneg.append([df[i][3]])
-class1 = np.array(class1, dtype='float32')
-class2 = np.array(class2, dtype='float32')
-ptpos = np.array(ptpos, dtype='float32')
-ptneg = np.array(ptneg, dtype='float32')
+class1 = np.array(class1)
+class2 = np.array(class2)
+ptpos = np.array(ptpos)
+ptneg = np.array(ptneg)
 
 mean1 = np.mean(class1, axis=0)
 mean2 = np.mean(class2, axis=0)
@@ -44,9 +43,7 @@ print('W')
 print(W)
 
 # Plot the 3D points
-threeD = plt.figure()
-D3 = threeD.add_subplot(111, projection='3d')
-
+D3 = plt.figure().add_subplot(111, projection='3d')
 D3.scatter(class1[:, 0], class1[:, 1], class1[:, 2], c='r', marker='o')
 D3.scatter(class2[:, 0], class2[:, 1], class2[:, 2], c='b', marker='o')
 plt.legend(['Positive', 'Negative'])
@@ -65,17 +62,14 @@ pdf2 = stats.norm.pdf(projection_2, np.mean(
     projection_2), np.std(projection_2))
 
 
-def solve(m1, m2, std1, std2):
-    # Calculate roots of 2 normal distributions
-    a = 1 / (2 * std1**2) - 1 / (2 * std2**2)
-    b = m2 / (std2**2) - m1 / (std1**2)
-    c = m1**2 / (2 * std1**2) - m2**2 / (2 * std2**2) + np.log(std1 / std2)
-    return np.roots([a, b, c])
-
-
+xa = 1 / (2 * np.std(projection_1)**2) - 1 / (2 * np.std(projection_2)**2)
+xb = np.mean(projection_2) / (np.std(projection_2)**2) - \
+    (np.mean(projection_1) / (np.std(projection_1)**2))
+xc = np.mean(projection_1)**2 / (2 * np.std(projection_1)**2) - np.mean(projection_2)**2 / \
+    ((2 * np.std(projection_2)**2)) + \
+    np.log(np.std(projection_1) / np.std(projection_2))
 # 1D Projections
-discpt = solve(np.mean(projection_1), np.mean(projection_2),
-               np.std(projection_1), np.std(projection_2))
+discpt = np.roots([xa, xb, xc])
 print('Threshold')
 print(discpt[1])
 pt = discpt[1]
@@ -108,8 +102,8 @@ xline = coord * W[0] + alphax
 yline = coord * W[1] + alphay
 zline = coord * W[2] + alphaz
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+
+ax = plt.figure().add_subplot(111, projection='3d')
 
 xt = np.linspace(-4, 4, 200)
 yt = np.linspace(-4, 4, 200)
@@ -130,8 +124,8 @@ plt.title('Discriminating Plane, W and Threshold')
 plt.show()
 
 # 3D plot with Discriminating Plane, W and Threshold
-fig = plt.figure()
-D3 = fig.add_subplot(111, projection='3d')
+
+D3 = plt.figure().add_subplot(111, projection='3d')
 
 D3.scatter(class1[:, 0], class1[:, 1], class1[:, 2], c='r', marker='o')
 D3.scatter(class2[:, 0], class2[:, 1], class2[:, 2], c='b', marker='o')
