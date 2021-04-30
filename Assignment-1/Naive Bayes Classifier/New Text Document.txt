@@ -1,0 +1,7 @@
+Naive Bayes Classifier 
+
+BITS F464 : ML
+
+Mudit Chaturvedi - 2018A7PS0248H
+Ashna Swaika - 2018A7PS0027H
+Rohan Sachan - 2018B3A70992H
